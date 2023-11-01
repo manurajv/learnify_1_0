@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:learnify_1_0/home_screen.dart';
-import 'package:learnify_1_0/course_catalog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:learnify_1_0/instructor_home_screen.dart';
 import 'registration_screen.dart';
@@ -16,10 +15,10 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   String? _errorMessage;
 
   @override
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -113,12 +112,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (userRole == 'student') {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (_) => InstructorHomeScreen()),
+                          MaterialPageRoute(builder: (_) => HomeScreen()),
                         );
                       } else if (userRole == 'instructor') {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (_) => CourseCatalog()),
+                          MaterialPageRoute(builder: (_) => InstructorHomeScreen()),
                         );
                       } else {
                         setState(() {
@@ -167,4 +166,5 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
 }

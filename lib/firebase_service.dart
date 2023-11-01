@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:image/image.dart' as img;
+import 'package:path/path.dart';
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -108,5 +109,44 @@ class FirebaseService {
       print('Error updating user profile image: $e');
     }
   }
+
+  Future<String?> uploadPPT(File file) async {
+    try {
+      final fileName = basename(file.path);
+      final Reference storageReference =
+      _storage.ref().child('ppt_files/$fileName');
+      final UploadTask uploadTask = storageReference.putFile(file);
+
+      await uploadTask;
+
+      // Get the download URL for the uploaded file
+      final String downloadUrl = await storageReference.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading PPT: $e');
+      return null;
+    }
+  }
+
+  Future<String?> uploadVideo(File file) async {
+    try {
+      final fileName = basename(file.path);
+      final Reference storageReference =
+      _storage.ref().child('video_files/$fileName');
+      final UploadTask uploadTask = storageReference.putFile(file);
+
+      await uploadTask;
+
+      // Get the download URL for the uploaded file
+      final String downloadUrl = await storageReference.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading video: $e');
+      return null;
+    }
+  }
+
 
 }

@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'auth_service.dart';
-import 'face_recognition_screen.dart'; // Import the AuthService
+import 'face_recognition_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -15,7 +16,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   String _selectedRole = 'student'; // Default role
-  AuthService _authService = AuthService(); // Create an instance of AuthService
+  AuthService _authService = AuthService();
+  bool isLoggedIn = false;
 
   void registerUser() async {
     String email = _emailController.text;
@@ -24,6 +26,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     User? user = await _authService.signUpWithEmailAndPassword(email, password);
 
     if (user != null) {
+      login();
       // Registration successful, save user data to Firestore
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'email': email,
@@ -189,4 +192,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
     );
   }
+
+  Future<void> login() async {
+    // Simulate the login process
+    await Future.delayed(Duration(seconds: 2));
+
+    // Update the login status
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('loggedIn', true);
+
+    setState(() {
+      isLoggedIn = true;
+    });
+  }
+
 }

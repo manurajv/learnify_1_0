@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'course_explore_tab.dart';
+import 'dashboard_tab.dart';
 import 'home_tab.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// Implement your custom tab screens (e.g., HomeTab, ExploreTab, DashboardTab, LikesTab, ProfileTab) here.
+// Implement custom tab screens (e.g., HomeTab, ExploreTab, DashboardTab, LikesTab, ProfileTab) here.
 // Each tab should be a separate StatefulWidget or StatelessWidget.
 
 class HomeTab extends StatelessWidget {
@@ -85,11 +85,7 @@ class ExploreTab extends StatelessWidget {
 class DashboardTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Add Tab'),
-      ),
-    );
+    return DashboardTabE();
   }
 }
 

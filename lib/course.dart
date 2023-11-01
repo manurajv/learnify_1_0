@@ -1,35 +1,39 @@
-import 'package:flutter/material.dart';
-import 'package:learnify_1_0/units_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class CourseSettingsScreen extends StatefulWidget {
-  final String courseName;
+class Course extends StatefulWidget {
   final String courseCode;
-  final String imageUrl;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  CourseSettingsScreen({
-    required this.courseName,
+  Course({
     required this.courseCode,
-    required this.imageUrl,
   });
 
   @override
-  _CourseSettingsScreenState createState() => _CourseSettingsScreenState();
+  _CourseState createState() => _CourseState();
 }
 
-class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
+class _CourseState extends State<Course> {
+  String? instructorUid;
+
   Future<List<List<String>>> fetchUnitDetails() async {
-    return await getUnitsDetails(widget._auth.currentUser!.uid, widget.courseCode);
+    instructorUid = await getInstructorUID(widget.courseCode);
+    return await getUnitsDetails(instructorUid!, widget.courseCode);
   }
 
   @override
+  void initState() {
+    super.initState();
+    _fetchInstructorUid();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Course Settings'),
+        title: Text('Course Details'),
       ),
       body: GridView(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -55,20 +59,20 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
               child: Column(
                 children: [
                   Container(
-                    child: Image.network(
-                      widget.imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                    // child: Image.network(
+                    //   widget.imageUrl,
+                    //   fit: BoxFit.cover,
+                    // ),
                     height: 140,
                   ),
                   Container(
-                    child: Text(
-                      'Course Name: ${widget.courseName}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
+                    // child: Text(
+                    //   'Course Name: ${widget.courseName}',
+                    //   style: TextStyle(
+                    //     fontSize: 20,
+                    //     color: Colors.black,
+                    //   ),
+                    // ),
                   ),
                   Container(
                     child: Text(
@@ -78,17 +82,6 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
                         color: Colors.black,
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UnitsScreen(courseCode: widget.courseCode),
-                        ),
-                      );
-                    },
-                    child: Text('Add Unit'),
                   ),
                   Expanded(
                     child: FutureBuilder<List<List<String>>>(
@@ -123,7 +116,7 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
                                       builder: (BuildContext context) {
                                         return AlertDialog(
                                           title: Text("Message"),
-                                          content: Text("Unit Edit Feature will implemented soon"),
+                                          content: Text("Access to proceed with unit will be allowed soon"),
                                           actions: <Widget>[
                                             TextButton(
                                               child: Text("OK"),
@@ -167,6 +160,29 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
     );
   }
 
+  Future<String?> getInstructorUID(String courseCode) async {
+    try {
+      DocumentSnapshot courseDoc = await widget._firestore
+          .collection('courses_metadata')
+          .doc(courseCode)
+          .get();
+
+      if (courseDoc.exists) {
+        return courseDoc.get('instructorUid');
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error getting instructorUID: $e');
+      return null;
+    }
+  }
+
+  Future<void> _fetchInstructorUid() async {
+    instructorUid = await getInstructorUID(widget.courseCode);
+    setState(() {});
+  }
+
   Future<List<List<String>>> getUnitsDetails(String uid, String courseCode) async {
     List<List<String>> unitsDetailsArr = [];
 
@@ -208,4 +224,5 @@ class _CourseSettingsScreenState extends State<CourseSettingsScreen> {
       return [];
     }
   }
+
 }

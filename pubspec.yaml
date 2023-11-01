@@ -62,6 +62,12 @@ dependencies:
 
   image: ^4.0.17
 
+  file_picker: ^6.0.0
+
+  path: ^1.8.3
+
+  shared_preferences: ^2.0.10
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -88,6 +94,7 @@ flutter:
   assets:
      - assets/1.jpg
      - assets/loading_img.gif
+     - assets/loading_img.png
      - assets/logo.png
      - assets/login.png
      - assets/register.png

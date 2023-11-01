@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'auth_service.dart';
 import 'course_model.dart';
 import 'course_screen.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'login_screen.dart';
 
 class InstructorHomeScreen extends StatefulWidget {
   const InstructorHomeScreen({super.key});
@@ -22,6 +24,7 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
   final TextEditingController _courseCodeController = TextEditingController();
   XFile? selectedImage; // This variable will hold the selected image file.
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  bool isLoggedIn = true;
 
   DocumentSnapshot? _selectedCourses;
 
@@ -30,6 +33,15 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Instructor Homepage'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              // Add your logout logic here
+              _signOut(context);
+            },
+          ),
+        ],
         automaticallyImplyLeading: false,
       ),
       body: Column(
@@ -227,6 +239,7 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
                       .collection('courses_metadata')
                       .doc(courseCode)
                       .set({
+                    'instructorUid': uid,
                     'courseName': courseName,
                     'courseCode': courseCode,
                     'imageUrl': imageUrl, // Add the image URL
@@ -253,5 +266,26 @@ class _InstructorHomeScreenState extends State<InstructorHomeScreen> {
     );
   }
 
+  Future<void> _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // Update the login status
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setBool('loggedIn', false);
+
+      setState(() {
+        isLoggedIn = false;
+      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
+
+    } catch (e) {
+      print('Error during logout: $e');
+    }
+  }
 
 }
