@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'course_catalog.dart';
 import 'course_model.dart';
+import 'unitcontentpage.dart';
+
 
 class CourseDetailsPage extends StatelessWidget {
   final Course course;
@@ -64,7 +65,34 @@ class CourseDetailsPage extends StatelessWidget {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
+                  //
                   // Add syllabus items here using ListView.builder or ListTile
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: course.units.length,
+                    itemBuilder: (context, index) {
+                      final unit = course.units[index];
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UnitContentPage(
+                                unitTitle: unit.unitTitle,
+                                unitContent: unit.unitContent,
+                                videoUrl: 'URL_to_unit_x_video.mp4', unitDescription: '', pptUrl: '',
+                              ),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          child: ListTile(
+                            title: Text(unit.unitTitle),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -89,3 +117,5 @@ class CourseDetailsPage extends StatelessWidget {
     );
   }
 }
+
+

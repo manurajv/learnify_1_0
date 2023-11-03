@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'course_model.dart';
-import 'login_screen.dart';
 import 'course_details.dart';
 
 class CourseCatalog extends StatelessWidget {

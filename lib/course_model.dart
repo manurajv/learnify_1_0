@@ -13,6 +13,8 @@ class Course {
     this.rating,
   });
 
+  get units => null;
+
   @override
   static Course fromMap(Map<String, dynamic> query){
     Course course = Course();

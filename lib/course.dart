@@ -2,15 +2,48 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'unitcontentpage.dart';
 
 class Course extends StatefulWidget {
   final String courseCode;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Course({
-    required this.courseCode,
+  Course(
+
+  {
+
+  required
+  this.courseCode,
   });
+  // Future<Map<String, String>> fetchUnitUrls(String unitId) async {
+  //   try {
+  //     DocumentSnapshot unitDoc = await FirebaseFirestore.instance
+  //         .collection('courses')
+  //         .doc(_CourseState().instructorUid)
+  //         .collection(courseCode)
+  //         .doc('Units')
+  //         .collection('Units').doc(unitId).get();
+  //
+  //     if (unitDoc.exists) {
+  //       return {
+  //         'pptUrl': unitDoc.get('pptUrl'),
+  //         'videoUrl': unitDoc.get('videoUrl'),
+  //       };
+  //     } else {
+  //       return {
+  //         'pptUrl': '',
+  //         'videoUrl': '',
+  //       };
+  //     }
+  //   } catch (e) {
+  //     print('Error getting unit URLs: $e');
+  //     return {
+  //       'pptUrl': '',
+  //       'videoUrl': '',
+  //     };
+  //   }
+  // }
 
   @override
   _CourseState createState() => _CourseState();
@@ -105,29 +138,33 @@ class _CourseState extends State<Course> {
                                 return GestureDetector(
                                   onTap: () {
                                     // Navigate to the EditUnitScreen when the card is tapped
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => EditUnitScreen(unitDetails),
-                                    //   ),
-                                    // );
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text("Message"),
-                                          content: Text("Access to proceed with unit will be allowed soon"),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text("OK"),
-                                              onPressed: () {
-                                                Navigator.of(context).pop(); // Close the popup
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UnitContentPage(
+                                          unitTitle: 'Unit $x',
+                                          videoUrl: 'URL_to_unit_x_video.mp4', unitDescription: '', pptUrl: '', unitContent: null,
+                                        ),
+
+                                      ),
                                     );
+                                    // showDialog(
+                                    //   context: context,
+                                    //   builder: (BuildContext context) {
+                                    //     return AlertDialog(
+                                    //       title: Text("Message"),
+                                    //       content: Text("Access to proceed with unit will be allowed soon"),
+                                    //       actions: <Widget>[
+                                    //         TextButton(
+                                    //           child: Text("OK"),
+                                    //           onPressed: () {
+                                    //             Navigator.of(context).pop(); // Close the popup
+                                    //           },
+                                    //         ),
+                                    //       ],
+                                    //     );
+                                    //   },
+                                    // );
                                   },
                                   child: Card(
                                     child: ListTile(
